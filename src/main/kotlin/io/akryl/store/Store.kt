@@ -1,11 +1,11 @@
 package io.akryl.store
 
 import io.akryl.*
-import io.akryl.rx.EmptyComputedPropertyContainer
+import io.akryl.rx.EmptyReactiveContainer
 import io.akryl.rx.observable
 import kotlin.reflect.KClass
 
-abstract class Store : EmptyComputedPropertyContainer {
+abstract class Store : EmptyReactiveContainer {
     companion object {
         @Suppress("UNCHECKED_CAST")
         fun <T : Store> of(context: BuildContext, clazz: KClass<T>): T {
