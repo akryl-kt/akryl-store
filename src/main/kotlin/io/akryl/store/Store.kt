@@ -1,6 +1,8 @@
 package io.akryl.store
 
 import io.akryl.*
+import io.akryl.rx.EmptyComputedPropertyContainer
+import io.akryl.rx.observable
 import kotlin.reflect.KClass
 
 abstract class Store : EmptyComputedPropertyContainer {

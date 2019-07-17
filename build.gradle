@@ -20,7 +20,7 @@ apply plugin: "maven"
 apply plugin: 'com.moowork.node'
 
 group = "io.akryl"
-version = "0.1.0"
+version = "0.1.1"
 
 repositories {
     mavenLocal()
@@ -29,7 +29,7 @@ repositories {
 }
 
 dependencies {
-    compile "io.akryl:akryl-core:0.2.1"
+    compile "io.akryl:akryl-core:0.4.0"
     compile "org.jetbrains.kotlin:kotlin-stdlib-js:$kotlinVersion"
 }
 
