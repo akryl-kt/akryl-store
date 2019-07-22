@@ -2,10 +2,12 @@ package io.akryl.store
 
 import io.akryl.*
 import io.akryl.rx.EmptyReactiveContainer
+import io.akryl.rx.ReactiveContainer
+import io.akryl.rx.ReactiveHandle
 import io.akryl.rx.observable
 import kotlin.reflect.KClass
 
-abstract class Store : EmptyReactiveContainer {
+abstract class Store : ReactiveContainer {
     companion object {
         @Suppress("UNCHECKED_CAST")
         fun <T : Store> of(context: BuildContext, clazz: KClass<T>): T {
@@ -17,6 +19,8 @@ abstract class Store : EmptyReactiveContainer {
 
         inline fun <reified T : Store> of(context: BuildContext) = of(context, T::class)
     }
+
+    final override fun registerReactiveHandle(handle: ReactiveHandle) {}
 
     open fun created() {}
 }
