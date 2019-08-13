@@ -1,60 +1,33 @@
 package io.akryl.store
 
 import io.akryl.*
-import io.akryl.rx.EmptyReactiveContainer
+import io.akryl.react.Context
+import io.akryl.react.ReactNode
+import io.akryl.react.createContext
 import io.akryl.rx.ReactiveContainer
 import io.akryl.rx.ReactiveHandle
 import io.akryl.rx.observable
-import kotlin.reflect.KClass
+
+class StoreContext<T : Store>(
+  val context: Context<T?>
+) {
+  companion object {
+    fun <T : Store> create(): StoreContext<T> {
+      val context = createContext<T?>(null)
+      return StoreContext(context)
+    }
+  }
+
+  fun provide(store: T, child: ReactNode) = context.provide(observable(store), child)
+}
 
 abstract class Store : ReactiveContainer {
-    companion object {
-        @Suppress("UNCHECKED_CAST")
-        fun <T : Store> of(context: BuildContext, clazz: KClass<T>): T {
-            val state = context
-                .ancestorStateOf { (it is StoreProviderState<*>) && clazz.isInstance(it.store) }
-                as? StoreProviderState<*>
-            return (state?.store as? T) ?: throw RuntimeException("Store with class '$clazz' not found")
-        }
-
-        inline fun <reified T : Store> of(context: BuildContext) = of(context, T::class)
+  companion object {
+    fun <T : Store> of(context: StoreContext<T>): T {
+      val store = useContext(context.context)
+      return store ?: throw RuntimeException("Store not found")
     }
+  }
 
-    final override fun registerReactiveHandle(handle: ReactiveHandle) {}
-
-    open fun created() {}
-}
-
-data class StoreProvider<T : Store>(
-    val store: () -> T,
-    val child: Widget
-) : StatefulWidget() {
-    override fun createState(context: BuildContext): State<*> = StoreProviderState<T>(context)
-}
-
-class StoreProviderState<T : Store>(context: BuildContext) : State<StoreProvider<T>>(context) {
-    val store = observable(widget.store())
-
-    override fun created() {
-        super.created()
-        store.created()
-    }
-
-    override fun build(context: BuildContext) = widget.child
-}
-
-data class MultiStoreProvider(
-    val modules: List<Store>,
-    val child: Widget
-) : StatelessWidget() {
-    override fun build(context: BuildContext): Widget {
-        var result = child
-        for (module in modules) {
-            result = StoreProvider(
-                store = { module },
-                child = result
-            )
-        }
-        return result
-    }
+  final override fun registerReactiveHandle(handle: ReactiveHandle) {}
 }
