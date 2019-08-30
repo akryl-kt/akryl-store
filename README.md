@@ -2,7 +2,27 @@
 
 Reactive store library for Akryl.
 
-## Usage
+# Installation
+
+## Gradle
+
+1. Add jcenter repository:
+
+```gradle
+repositories {
+    jcenter()
+}
+```
+
+2. Add dependency:
+
+```gradle
+dependencies {
+    compile "io.akryl:akryl-store:<version>"
+}
+```
+
+# Usage
 
 Define store class:
 
